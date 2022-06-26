@@ -1,4 +1,3 @@
-const todoModel = require("../models/todoModel");
 const Todo = require("../models/todoModel");
 
 const getTodos = async (req, res) => {
@@ -16,7 +15,7 @@ const addTodos = async (req, res) => {
     res.status(400).json({ message: "Wrong data" });
   }
   try {
-    const todo = await todoModel.create({
+    const todo = await Todo.create({
       todo: bodyData,
     });
     res.status(200).json({ todo });
@@ -27,11 +26,11 @@ const addTodos = async (req, res) => {
 
 const updateTodos = async (req, res) => {
   try {
-    const todo = await todoModel.findById(req.params.id);
+    const todo = await Todo.findById(req.params.id);
     if (!todo) {
       res.status(400).json({ message: "Todo Id does not exist" });
     }
-    const updatedTodo = await todoModel.findByIdAndUpdate(
+    const updatedTodo = await Todo.findByIdAndUpdate(
       req.params.id,
       req.body,
       {
@@ -46,7 +45,7 @@ const updateTodos = async (req, res) => {
 
 const deleteTodos = async (req, res) => {
   try {
-    await todoModel.findByIdAndDelete(req.params.id);
+    await Todo.findByIdAndDelete(req.params.id);
     res.status(200).json({ message: `Todo with id: ${req.params.id} deleted` });
   } catch (error) {
     req.status(404).json({ message: "Cannot delete todos" });
