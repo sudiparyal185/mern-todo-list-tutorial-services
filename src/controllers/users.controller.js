@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
+const { generateToken } = require("../utils/generateToken");
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
@@ -25,6 +26,7 @@ const registerUser = async (req, res) => {
         __id: newUser.id,
         name: newUser.name,
         email: newUser.email,
+        token: generateToken(newUser.id),
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
@@ -35,29 +37,30 @@ const registerUser = async (req, res) => {
 };
 
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      res.status(400).json({ message: "Please check the required fields" });
-    }
-    try {
-      const user = await User.findOne({ email });
-      if (user) {
-        const doesPasswordMatch = await bcrypt.compare(password, user.password);
-        if (doesPasswordMatch) {
-          res.status(200).json({
-            __id: user.id,
-            name: user.name,
-            email: user.email,
-          });
-        } else {
-          res.status(400).json({ message: "Password does not match" });
-        }
+  const { email, password } = req.body;
+  if (!email || !password) {
+    res.status(400).json({ message: "Please check the required fields" });
+  }
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      const doesPasswordMatch = await bcrypt.compare(password, user.password);
+      if (doesPasswordMatch) {
+        res.status(200).json({
+          __id: user.id,
+          name: user.name,
+          email: user.email,
+          token: generateToken(user.id),
+        });
       } else {
-        res.status(400).json({ message: "Email does not exist " });
+        res.status(400).json({ message: "Password does not match" });
       }
-    } catch (error) {
-      res.status(400).json({ message: "Please check required fields " });
+    } else {
+      res.status(400).json({ message: "Email does not exist " });
     }
+  } catch (error) {
+    res.status(400).json({ message: "Please check required fields " });
+  }
 };
 
 module.exports = {
