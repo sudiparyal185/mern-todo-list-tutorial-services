@@ -1,6 +1,14 @@
 const Todo = require("../models/todoModel");
 const User = require("../models/userModel");
 const getTodos = async (req, res) => {
+  /**
+   * Uncomment to load test
+   */
+  // let n = 5000000000;
+  // let count = 0;
+  // for (let i = 0; i <= n; i++) {
+  //   count += i;
+  // }
   try {
     const todos = await Todo.find({ user: req.user.id });
     res.status(200).json({ todos });
