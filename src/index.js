@@ -1,5 +1,6 @@
 const express = require("express");
 const cluster = require("cluster");
+const cors = require("cors");
 const totalCpus = require("os").cpus().length;
 require("dotenv").config();
 const todosRoutes = require("./routes/todos.routes");
@@ -22,7 +23,7 @@ if (cluster.isMaster) {
 } else {
   const PORT = process.env.PORT || 3005;
   const app = express();
-
+  app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
 
