@@ -11,7 +11,7 @@ const getTodos = async (req, res) => {
   // }
   try {
     const todos = await Todo.find({ user: req.user.id });
-    res.status(200).json({ todos });
+    res.status(200).json(todos);
   } catch (error) {
     res.status(404).json({ message: "Cannot find todos" });
   }
@@ -27,7 +27,7 @@ const addTodos = async (req, res) => {
       todo: bodyData,
       user: req.user.id,
     });
-    res.status(200).json({ todo });
+    res.status(200).json(todo);
   } catch (error) {
     res.status(400).json({ message: "Wrong data" });
   }
@@ -69,7 +69,7 @@ const deleteTodos = async (req, res) => {
       res.status(401).json({ message: "User not authorized" });
     }
     await todo.remove();
-    res.status(200).json({ message: `Todo with id: ${req.params.id} deleted` });
+    res.status(200).json({ id: req.params.id });
   } catch (error) {
     req.status(404).json({ message: "Cannot delete todos" });
   }
