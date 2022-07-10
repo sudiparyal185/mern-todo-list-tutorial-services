@@ -1,5 +1,7 @@
 const express = require("express");
+const cluster = require("cluster");
 const cors = require("cors");
+const totalCpus = require("os").cpus().length;
 require("dotenv").config();
 const todosRoutes = require("./routes/todos.routes");
 const userRoutes = require("./routes/users.routes");
